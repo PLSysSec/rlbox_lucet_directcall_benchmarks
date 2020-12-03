@@ -650,6 +650,10 @@ private:
   }
 
 protected:
+
+#define rlbox_lucet_sandbox_lookup_symbol(func_name)                            \
+  reinterpret_cast<void*>(&guest_func_##func_name) /* NOLINT */
+
   // Set external_loads_exist to true, if the host application loads the
   // library lucet_module_path outside of rlbox_lucet_sandbox such as via dlopen
   // or the Windows equivalent
@@ -684,8 +688,8 @@ protected:
     #endif
 
     // cache these for performance
-    malloc_index = impl_lookup_symbol("malloc");
-    free_index = impl_lookup_symbol("free");
+    malloc_index = rlbox_lucet_sandbox_lookup_symbol(malloc);
+    free_index = rlbox_lucet_sandbox_lookup_symbol(free);
 
     set_callbacks_slots_ref(external_loads_exist);
   }
@@ -842,9 +846,21 @@ protected:
     return lucet_get_heap_base(sandbox);
   }
 
-  void* impl_lookup_symbol(const char* func_name)
+  // adding a template so that we can use static_assert to fire only if this
+  // function is invoked
+  template<typename T = void>
+  void* impl_lookup_symbol(const char* /* func_name */)
   {
-    return lucet_lookup_function(sandbox, func_name);
+    // Will fire if this impl_lookup_symbol is ever called for the static
+    // sandbox
+    constexpr bool fail = std::is_same_v<T, void>;
+    rlbox_detail_static_fail_because(
+      fail,
+      "The lucet_sandbox uses static calls and thus developers should add\n\n"
+      "#define RLBOX_USE_STATIC_CALLS() rlbox_lucet_sandbox_lookup_symbol\n\n"
+      "to their code, to ensure that static calls are handled correctly.");
+
+    return nullptr;
   }
 
   template<typename T, typename T_Converted, typename... T_Args>
