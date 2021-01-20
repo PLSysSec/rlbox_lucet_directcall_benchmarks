@@ -124,3 +124,25 @@ target_link_libraries(main_zerocost
 if(UNIX AND NOT (${CMAKE_SYSTEM_NAME} MATCHES "Darwin"))
   target_link_libraries(main_zerocost rt)
 endif()
+
+#######################################
+
+add_executable(main_mpkfullsave
+    ${CMAKE_SOURCE_DIR}/main.cpp
+    ${CMAKE_SOURCE_DIR}/lucet_binary.S
+    ${CMAKE_SOURCE_DIR}/../rlbox_mpk_sandbox/c_src/trampoline_c.c
+    ${CMAKE_SOURCE_DIR}/../rlbox_mpk_sandbox/c_src/trampoline_asm.S
+)
+target_compile_definitions(main_mpkfullsave PUBLIC RLBOX_ZEROCOST_TRANSITION_MPKFULLSAVE)
+target_compile_definitions(main_mpkfullsave PUBLIC GLUE_LIB_LUCET_PATH="${CMAKE_SOURCE_DIR}/../rlbox_mpk_sandbox/build_release/librlbox_glue_lib_shared.${DYLIB_EXT}")
+target_include_directories(main_mpkfullsave PUBLIC ${CMAKE_SOURCE_DIR}/../rlbox_mpk_sandbox/include)
+target_include_directories(main_mpkfullsave PUBLIC ${CMAKE_SOURCE_DIR}/../rlbox_sandboxing_api/code/include)
+target_link_libraries(main_mpkfullsave
+    ${LINK_LUCET_LIB}
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${CMAKE_DL_LIBS}
+    ${CMAKE_SOURCE_DIR}/../rlbox_mpk_sandbox/build_release/librlbox_glue_lib_static.a
+)
+if(UNIX AND NOT (${CMAKE_SYSTEM_NAME} MATCHES "Darwin"))
+  target_link_libraries(main_mpkfullsave rt)
+endif()

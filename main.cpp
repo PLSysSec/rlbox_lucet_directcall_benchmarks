@@ -11,14 +11,24 @@ void guest_func_free() {abort();}
 
 #define RLBOX_SINGLE_THREADED_INVOCATIONS
 #define RLBOX_EMBEDDER_PROVIDES_TLS_STATIC_VARIABLES
-#define RLBOX_USE_STATIC_CALLS() rlbox_lucet_sandbox_lookup_symbol
 #include "rlbox_helpers.hpp"
-#ifdef RLBOX_ZEROCOST_TRANSITION_ZEROCOST
-    #include "rlbox_lucet_direct_sandbox.hpp"
+
+#ifdef RLBOX_ZEROCOST_TRANSITION_MPKFULLSAVE
+  #define RLBOX_USE_STATIC_CALLS() rlbox_mpk_sandbox_lookup_symbol
+  #include "rlbox_mpk_heavy_sandbox.hpp"
+  using sandbox_t = rlbox::rlbox_mpk_sandbox;
+  RLBOX_MPK_SANDBOX_STATIC_VARIABLES();
 #else
-    #include "rlbox_lucet_heavy_direct_sandbox.hpp"
+  #define RLBOX_USE_STATIC_CALLS() rlbox_lucet_sandbox_lookup_symbol
+  #ifdef RLBOX_ZEROCOST_TRANSITION_ZEROCOST
+      #include "rlbox_lucet_direct_sandbox.hpp"
+  #else
+      #include "rlbox_lucet_heavy_direct_sandbox.hpp"
+  #endif
+  using sandbox_t = rlbox::rlbox_lucet_sandbox;
+  RLBOX_LUCET_SANDBOX_STATIC_VARIABLES();
 #endif
-RLBOX_LUCET_SANDBOX_STATIC_VARIABLES();
+
 #include "rlbox.hpp"
 
 #ifndef GLUE_LIB_LUCET_PATH
@@ -43,7 +53,7 @@ int main(int argc, char const *argv[])
       RLBOX_UNUSED(val);
     }
 
-    rlbox::rlbox_sandbox<rlbox::rlbox_lucet_sandbox> sandbox;
+    rlbox::rlbox_sandbox<sandbox_t> sandbox;
     sandbox.create_sandbox(GLUE_LIB_LUCET_PATH);
 
     const int test_iterations = 1000000;
