@@ -146,3 +146,23 @@ target_link_libraries(main_mpkfullsave
 if(UNIX AND NOT (${CMAKE_SYSTEM_NAME} MATCHES "Darwin"))
   target_link_libraries(main_mpkfullsave rt)
 endif()
+
+#######################################
+
+add_executable(main_segmentsfi
+    ${CMAKE_SOURCE_DIR}/main.cpp
+    ${CMAKE_SOURCE_DIR}/segmentsfi_binary.S
+    ${CMAKE_SOURCE_DIR}/../rlbox_segmentsfizerocost_sandbox/c_src/segmentsfi_sandbox_runtime.cpp
+)
+set_target_properties(main_segmentsfi PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
+target_compile_definitions(main_segmentsfi PUBLIC RLBOX_ZEROCOST_TRANSITION_SEGMENTSFI)
+target_compile_definitions(main_segmentsfi PUBLIC GLUE_LIB_LUCET_PATH="")
+target_include_directories(main_segmentsfi PUBLIC ${CMAKE_SOURCE_DIR}/../rlbox_segmentsfizerocost_sandbox/include)
+target_include_directories(main_segmentsfi PUBLIC ${CMAKE_SOURCE_DIR}/../rlbox_sandboxing_api/code/include)
+target_link_libraries(main_segmentsfi
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${CMAKE_DL_LIBS}
+)
+if(UNIX AND NOT (${CMAKE_SYSTEM_NAME} MATCHES "Darwin"))
+  target_link_libraries(main_segmentsfi rt)
+endif()

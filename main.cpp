@@ -18,6 +18,11 @@ void guest_func_free() {abort();}
   #include "rlbox_mpk_heavy_sandbox.hpp"
   using sandbox_t = rlbox::rlbox_mpk_sandbox;
   RLBOX_MPK_SANDBOX_STATIC_VARIABLES();
+#elif defined(RLBOX_ZEROCOST_TRANSITION_SEGMENTSFI)
+  #define RLBOX_USE_STATIC_CALLS() rlbox_segmentsfi_sandbox_lookup_symbol
+  #include "rlbox_segmentsfi_direct_sandbox.hpp"
+  using sandbox_t = rlbox::rlbox_segmentsfi_sandbox;
+  RLBOX_SEGMENTSSFI_SANDBOX_STATIC_VARIABLES();
 #else
   #define RLBOX_USE_STATIC_CALLS() rlbox_lucet_sandbox_lookup_symbol
   #ifdef RLBOX_ZEROCOST_TRANSITION_ZEROCOST
