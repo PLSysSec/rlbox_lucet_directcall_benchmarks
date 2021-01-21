@@ -129,9 +129,8 @@ endif()
 
 add_executable(main_mpkfullsave
     ${CMAKE_SOURCE_DIR}/main.cpp
-    ${CMAKE_SOURCE_DIR}/lucet_binary.S
+    ${CMAKE_SOURCE_DIR}/mpk_binary.S
     ${CMAKE_SOURCE_DIR}/../rlbox_mpk_sandbox/c_src/trampoline_c.c
-    ${CMAKE_SOURCE_DIR}/../rlbox_mpk_sandbox/c_src/trampoline_asm.S
 )
 target_compile_definitions(main_mpkfullsave PUBLIC RLBOX_ZEROCOST_TRANSITION_MPKFULLSAVE)
 target_compile_definitions(main_mpkfullsave PUBLIC GLUE_LIB_LUCET_PATH="${CMAKE_SOURCE_DIR}/../rlbox_mpk_sandbox/build_release/librlbox_glue_lib_shared.${DYLIB_EXT}")
