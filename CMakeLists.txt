@@ -49,16 +49,20 @@ endif()
 add_executable(main_fullsave
     ${CMAKE_SOURCE_DIR}/main.cpp
     ${CMAKE_SOURCE_DIR}/lucet_binary.S
-    ${CMAKE_SOURCE_DIR}/../zerocost_testing_sandbox/c_src/trampoline_c.c
-    ${CMAKE_SOURCE_DIR}/../zerocost_testing_sandbox/c_src/trampoline_asm.S
+    ${CMAKE_SOURCE_DIR}/../zerocost_heavy_trampoline/c_src/trampoline_src.cpp
 )
-target_compile_definitions(main_fullsave PUBLIC GLUE_LIB_LUCET_PATH="${CMAKE_SOURCE_DIR}/../zerocost_testing_sandbox/build_release/wasm/glue_lib_lucet.${DYLIB_EXT}")
-target_include_directories(main_fullsave PUBLIC ${CMAKE_SOURCE_DIR}/../zerocost_testing_sandbox/include)
-target_include_directories(main_fullsave PUBLIC ${CMAKE_SOURCE_DIR}/../rlbox_sandboxing_api/code/include)
+target_compile_definitions(main_fullsave
+  PUBLIC GLUE_LIB_LUCET_PATH="${CMAKE_SOURCE_DIR}/../zerocost_testing_sandbox/build_release/wasm/glue_lib_lucet.${DYLIB_EXT}"
+)
+target_include_directories(main_fullsave PUBLIC ${CMAKE_SOURCE_DIR}/../zerocost_testing_sandbox/include
+                                         PUBLIC ${CMAKE_SOURCE_DIR}/../rlbox_sandboxing_api/code/include
+                                         PUBLIC ${CMAKE_SOURCE_DIR}/../zerocost_heavy_trampoline/include
+                                         PUBLIC ${CMAKE_SOURCE_DIR}/../zerocost_heavy_trampoline/c_src
+)
 target_link_libraries(main_fullsave
-    ${LINK_LUCET_LIB}
-    ${CMAKE_THREAD_LIBS_INIT}
-    ${CMAKE_DL_LIBS}
+                      ${LINK_LUCET_LIB}
+                      ${CMAKE_THREAD_LIBS_INIT}
+                      ${CMAKE_DL_LIBS}
 )
 if(UNIX AND NOT (${CMAKE_SYSTEM_NAME} MATCHES "Darwin"))
   target_link_libraries(main_fullsave rt)
@@ -69,17 +73,21 @@ endif()
 add_executable(main_regsave
     ${CMAKE_SOURCE_DIR}/main.cpp
     ${CMAKE_SOURCE_DIR}/lucet_binary.S
-    ${CMAKE_SOURCE_DIR}/../zerocost_testing_sandbox/c_src/trampoline_c.c
-    ${CMAKE_SOURCE_DIR}/../zerocost_testing_sandbox/c_src/trampoline_asm.S
+    ${CMAKE_SOURCE_DIR}/../zerocost_heavy_trampoline/c_src/trampoline_src.cpp
 )
-target_compile_definitions(main_regsave PUBLIC RLBOX_ZEROCOST_NOSWITCHSTACK)
-target_compile_definitions(main_regsave PUBLIC GLUE_LIB_LUCET_PATH="${CMAKE_SOURCE_DIR}/../zerocost_testing_sandbox/build_release/wasm/glue_lib_lucet.${DYLIB_EXT}")
-target_include_directories(main_regsave PUBLIC ${CMAKE_SOURCE_DIR}/../zerocost_testing_sandbox/include)
-target_include_directories(main_regsave PUBLIC ${CMAKE_SOURCE_DIR}/../rlbox_sandboxing_api/code/include)
+target_compile_definitions(main_regsave
+  PUBLIC GLUE_LIB_LUCET_PATH="${CMAKE_SOURCE_DIR}/../zerocost_testing_sandbox/build_release/wasm/glue_lib_lucet.${DYLIB_EXT}"
+  PUBLIC RLBOX_ZEROCOST_NOSWITCHSTACK
+)
+target_include_directories(main_regsave PUBLIC ${CMAKE_SOURCE_DIR}/../zerocost_testing_sandbox/include
+                                         PUBLIC ${CMAKE_SOURCE_DIR}/../rlbox_sandboxing_api/code/include
+                                         PUBLIC ${CMAKE_SOURCE_DIR}/../zerocost_heavy_trampoline/include
+                                         PUBLIC ${CMAKE_SOURCE_DIR}/../zerocost_heavy_trampoline/c_src
+)
 target_link_libraries(main_regsave
-    ${LINK_LUCET_LIB}
-    ${CMAKE_THREAD_LIBS_INIT}
-    ${CMAKE_DL_LIBS}
+                      ${LINK_LUCET_LIB}
+                      ${CMAKE_THREAD_LIBS_INIT}
+                      ${CMAKE_DL_LIBS}
 )
 if(UNIX AND NOT (${CMAKE_SYSTEM_NAME} MATCHES "Darwin"))
   target_link_libraries(main_regsave rt)
@@ -90,17 +98,21 @@ endif()
 add_executable(main_win
     ${CMAKE_SOURCE_DIR}/main.cpp
     ${CMAKE_SOURCE_DIR}/lucet_binary.S
-    ${CMAKE_SOURCE_DIR}/../zerocost_testing_sandbox/c_src/trampoline_c.c
-    ${CMAKE_SOURCE_DIR}/../zerocost_testing_sandbox/c_src/trampoline_asm.S
+    ${CMAKE_SOURCE_DIR}/../zerocost_heavy_trampoline/c_src/trampoline_src.cpp
 )
-target_compile_definitions(main_win PUBLIC RLBOX_ZEROCOST_WINDOWSMODE)
-target_compile_definitions(main_win PUBLIC GLUE_LIB_LUCET_PATH="${CMAKE_SOURCE_DIR}/../zerocost_testing_sandbox/build_release/wasm/glue_lib_lucet.${DYLIB_EXT}")
-target_include_directories(main_win PUBLIC ${CMAKE_SOURCE_DIR}/../zerocost_testing_sandbox/include)
-target_include_directories(main_win PUBLIC ${CMAKE_SOURCE_DIR}/../rlbox_sandboxing_api/code/include)
+target_compile_definitions(main_win
+  PUBLIC GLUE_LIB_LUCET_PATH="${CMAKE_SOURCE_DIR}/../zerocost_testing_sandbox/build_release/wasm/glue_lib_lucet.${DYLIB_EXT}"
+  PUBLIC RLBOX_ZEROCOST_WINDOWSMODE
+)
+target_include_directories(main_win PUBLIC ${CMAKE_SOURCE_DIR}/../zerocost_testing_sandbox/include
+                                         PUBLIC ${CMAKE_SOURCE_DIR}/../rlbox_sandboxing_api/code/include
+                                         PUBLIC ${CMAKE_SOURCE_DIR}/../zerocost_heavy_trampoline/include
+                                         PUBLIC ${CMAKE_SOURCE_DIR}/../zerocost_heavy_trampoline/c_src
+)
 target_link_libraries(main_win
-    ${LINK_LUCET_LIB}
-    ${CMAKE_THREAD_LIBS_INIT}
-    ${CMAKE_DL_LIBS}
+                      ${LINK_LUCET_LIB}
+                      ${CMAKE_THREAD_LIBS_INIT}
+                      ${CMAKE_DL_LIBS}
 )
 if(UNIX AND NOT (${CMAKE_SYSTEM_NAME} MATCHES "Darwin"))
   target_link_libraries(main_win rt)
@@ -111,15 +123,21 @@ endif()
 add_executable(main_zerocost
     ${CMAKE_SOURCE_DIR}/main.cpp
     ${CMAKE_SOURCE_DIR}/lucet_binary.S
+    ${CMAKE_SOURCE_DIR}/../zerocost_heavy_trampoline/c_src/trampoline_src.cpp
 )
-target_compile_definitions(main_zerocost PUBLIC RLBOX_ZEROCOST_TRANSITION_ZEROCOST)
-target_compile_definitions(main_zerocost PUBLIC GLUE_LIB_LUCET_PATH="${CMAKE_SOURCE_DIR}/../zerocost_testing_sandbox/build_release/wasm/glue_lib_lucet.${DYLIB_EXT}")
-target_include_directories(main_zerocost PUBLIC ${CMAKE_SOURCE_DIR}/../zerocost_testing_sandbox/include)
-target_include_directories(main_zerocost PUBLIC ${CMAKE_SOURCE_DIR}/../rlbox_sandboxing_api/code/include)
+target_compile_definitions(main_zerocost
+  PUBLIC GLUE_LIB_LUCET_PATH="${CMAKE_SOURCE_DIR}/../zerocost_testing_sandbox/build_release/wasm/glue_lib_lucet.${DYLIB_EXT}"
+  PUBLIC RLBOX_ZEROCOST_TRANSITION_ZEROCOST
+)
+target_include_directories(main_zerocost PUBLIC ${CMAKE_SOURCE_DIR}/../zerocost_testing_sandbox/include
+                                         PUBLIC ${CMAKE_SOURCE_DIR}/../rlbox_sandboxing_api/code/include
+                                         PUBLIC ${CMAKE_SOURCE_DIR}/../zerocost_heavy_trampoline/include
+                                         PUBLIC ${CMAKE_SOURCE_DIR}/../zerocost_heavy_trampoline/c_src
+)
 target_link_libraries(main_zerocost
-    ${LINK_LUCET_LIB}
-    ${CMAKE_THREAD_LIBS_INIT}
-    ${CMAKE_DL_LIBS}
+                      ${LINK_LUCET_LIB}
+                      ${CMAKE_THREAD_LIBS_INIT}
+                      ${CMAKE_DL_LIBS}
 )
 if(UNIX AND NOT (${CMAKE_SYSTEM_NAME} MATCHES "Darwin"))
   target_link_libraries(main_zerocost rt)
@@ -130,17 +148,21 @@ endif()
 add_executable(main_mpkfullsave
     ${CMAKE_SOURCE_DIR}/main.cpp
     ${CMAKE_SOURCE_DIR}/mpk_binary.S
-    ${CMAKE_SOURCE_DIR}/../rlbox_mpk_sandbox/c_src/trampoline_c.c
+    ${CMAKE_SOURCE_DIR}/../zerocost_heavy_trampoline/c_src/trampoline_src.cpp
 )
-target_compile_definitions(main_mpkfullsave PUBLIC RLBOX_ZEROCOST_TRANSITION_MPKFULLSAVE)
-target_compile_definitions(main_mpkfullsave PUBLIC GLUE_LIB_LUCET_PATH="${CMAKE_SOURCE_DIR}/../rlbox_mpk_sandbox/build_release/librlbox_glue_lib_shared.${DYLIB_EXT}")
-target_include_directories(main_mpkfullsave PUBLIC ${CMAKE_SOURCE_DIR}/../rlbox_mpk_sandbox/include)
-target_include_directories(main_mpkfullsave PUBLIC ${CMAKE_SOURCE_DIR}/../rlbox_sandboxing_api/code/include)
+set_target_properties(main_mpkfullsave PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
+target_compile_definitions(main_mpkfullsave
+  PUBLIC GLUE_LIB_LUCET_PATH="${CMAKE_SOURCE_DIR}/../rlbox_mpk_sandbox/build_release/librlbox_glue_lib_shared_32.${DYLIB_EXT}"
+  PUBLIC RLBOX_ZEROCOST_TRANSITION_MPKFULLSAVE
+)
+target_include_directories(main_mpkfullsave PUBLIC ${CMAKE_SOURCE_DIR}/../rlbox_mpk_sandbox/include
+                                         PUBLIC ${CMAKE_SOURCE_DIR}/../rlbox_sandboxing_api/code/include
+                                         PUBLIC ${CMAKE_SOURCE_DIR}/../zerocost_heavy_trampoline/include
+                                         PUBLIC ${CMAKE_SOURCE_DIR}/../zerocost_heavy_trampoline/c_src
+)
 target_link_libraries(main_mpkfullsave
-    ${LINK_LUCET_LIB}
-    ${CMAKE_THREAD_LIBS_INIT}
-    ${CMAKE_DL_LIBS}
-    ${CMAKE_SOURCE_DIR}/../rlbox_mpk_sandbox/build_release/librlbox_glue_lib_static.a
+                      ${CMAKE_THREAD_LIBS_INIT}
+                      ${CMAKE_DL_LIBS}
 )
 if(UNIX AND NOT (${CMAKE_SYSTEM_NAME} MATCHES "Darwin"))
   target_link_libraries(main_mpkfullsave rt)
@@ -154,13 +176,17 @@ add_executable(main_segmentsfi
     ${CMAKE_SOURCE_DIR}/../rlbox_segmentsfizerocost_sandbox/c_src/segmentsfi_sandbox_runtime.cpp
 )
 set_target_properties(main_segmentsfi PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
-target_compile_definitions(main_segmentsfi PUBLIC RLBOX_ZEROCOST_TRANSITION_SEGMENTSFI)
-target_compile_definitions(main_segmentsfi PUBLIC GLUE_LIB_LUCET_PATH="")
-target_include_directories(main_segmentsfi PUBLIC ${CMAKE_SOURCE_DIR}/../rlbox_segmentsfizerocost_sandbox/include)
-target_include_directories(main_segmentsfi PUBLIC ${CMAKE_SOURCE_DIR}/../rlbox_sandboxing_api/code/include)
+target_compile_definitions(main_segmentsfi
+  PUBLIC GLUE_LIB_LUCET_PATH=""
+  PUBLIC RLBOX_ZEROCOST_TRANSITION_SEGMENTSFI
+)
+target_include_directories(main_segmentsfi PUBLIC ${CMAKE_SOURCE_DIR}/../rlbox_sandboxing_api/code/include
+                                           PUBLIC ${CMAKE_SOURCE_DIR}/../rlbox_segmentsfizerocost_sandbox/include
+                                           PUBLIC ${CMAKE_SOURCE_DIR}/../rlbox_segmentsfizerocost_sandbox/c_src
+)
 target_link_libraries(main_segmentsfi
-    ${CMAKE_THREAD_LIBS_INIT}
-    ${CMAKE_DL_LIBS}
+                      ${CMAKE_THREAD_LIBS_INIT}
+                      ${CMAKE_DL_LIBS}
 )
 if(UNIX AND NOT (${CMAKE_SYSTEM_NAME} MATCHES "Darwin"))
   target_link_libraries(main_segmentsfi rt)

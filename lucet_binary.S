@@ -1,5 +1,5 @@
+// Simple add function compiled with lucet
 // Assembly extracted from compiled lucet files
-
 .globl guest_func_simpleAddNoPrintTest
 .type guest_func_simpleAddNoPrintTest,@function
 .align 16
@@ -19,3 +19,7 @@ _guest_func_simpleAddNoPrintTest:
     rex pop %rbp
     retq
     xchg   %ax,%ax
+
+// Trampoline code modified for direct function calls
+#define HEAVY_TRAMPOLINE_MODIFY_FUNCTION_CALL(x) callq guest_func_simpleAddNoPrintTest
+#include "trampoline_asm_64.S"

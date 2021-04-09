@@ -2,6 +2,7 @@
     "files.associations": {
         "*.fst": "ocaml",
         "*.fsti": "ocaml",
-        "chrono": "cpp"
+        "chrono": "cpp",
+        "shared_mutex": "cpp"
     }
 }
